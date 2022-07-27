@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model SequelizeMeta {
+  name String @id @unique(map: "name") @db.VarChar(255)
+}
+
+model active_windows {
+  id                           Int       @id @default(autoincrement())
+  title                        String?   @db.Text
+  name                         String    @db.VarChar(255)
+  recordedAt                   DateTime  @db.DateTime(0)
+  platform                     String    @db.VarChar(255)
+  timeslotId                   Int?
+  createdAt                    DateTime  @db.DateTime(0)
+  updatedAt                    DateTime  @db.DateTime(0)
+  browserUrl                   String?   @db.Text
+  keyboardStrokes              Int?
+  mouseClicks                  Int?
+  mouseMoves                   Int?
+  systemUUID                   String?   @db.VarChar(255)
+  timeslotLocalId              Int?
+  timeslotStartTime            DateTime? @db.DateTime(0)
+  userId                       Int?
+  mouseMovedDistance           Float?
+  normalizedMouseMovedDistance Float?
+  mouseWheel                   Int?
+}
+
+model feedback_request_responses {
+  id         Int      @id @default(autoincrement())
+  taskId     Int?
+  recordedAt DateTime @db.DateTime(0)
+  response   Int
+  createdAt  DateTime @db.DateTime(0)
+  updatedAt  DateTime @db.DateTime(0)
+  email      String?  @db.VarChar(255)
+  userId     Int?
+}
+
+model screenshots {
+  id             Int      @id @default(autoincrement())
+  path           String   @db.VarChar(255)
+  activeWindowId Int
+  createdAt      DateTime @db.DateTime(0)
+  updatedAt      DateTime @db.DateTime(0)
+}
+
+model timeslots {
+  id          Int      @id @default(autoincrement())
+  timeslotId  Int
+  instanceId  String?  @db.VarChar(255)
+  taskName    String   @db.VarChar(255)
+  projectName String   @db.VarChar(255)
+  clientName  String   @db.VarChar(255)
+  email       String   @db.VarChar(255)
+  startTime   DateTime @db.DateTime(0)
+  stopTime    DateTime @db.DateTime(0)
+  createdAt   DateTime @db.DateTime(0)
+  updatedAt   DateTime @db.DateTime(0)
+
+  @@unique([instanceId, timeslotId], map: "timeslot_instance_unique")
+}
